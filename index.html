@@ -152,7 +152,10 @@
   </div>
 
   <script>
-    const signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+    const signs = [
+      "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+      "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
+    ];
 
     function getBCPRuler(age) {
       if (age >= 1 && age <= 12) return "Moon";
@@ -178,7 +181,9 @@
       }
 
       const lagnaIndex = signs.indexOf(lagna);
-      const focusFromLagna = (age - 25 + 12) % 12; // Age 25 = 1st house
+
+      // ✅ Corrected BCP Logic: Age 1 = 1st house, loops every 12 years
+      const focusFromLagna = (age - 1) % 12;
       const focusSignFromLagna = signs[(lagnaIndex + focusFromLagna) % 12];
 
       const focusFromMD = (mdHouse + focusFromLagna - 1) % 12;
@@ -232,6 +237,8 @@
       document.getElementById("age").value = "";
       document.getElementById("mdHouse").value = "";
       document.getElementById("output").innerHTML = "";
+      document.getElementById("lagna").focus();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   </script>
 </body>
