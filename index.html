@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BCP-Vimshottari Fusion Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #dbeafe, #f0f9ff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 25px 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 420px;
+      width: 90%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1e3a8a;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    button {
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    #output {
+      margin-top: 25px;
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    strong {
+      color: #1e40af;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>BCP-Vimshottari Fusion Calculator</h2>
+
+    <label for="lagna">Lagna Sign:</label>
+    <select id="lagna">
+      <option value="Aries">Aries</option>
+      <option value="Taurus">Taurus</option>
+      <option value="Gemini">Gemini</option>
+      <option value="Cancer">Cancer</option>
+      <option value="Leo">Leo</option>
+      <option value="Virgo">Virgo</option>
+      <option value="Libra">Libra</option>
+      <option value="Scorpio">Scorpio</option>
+      <option value="Sagittarius">Sagittarius</option>
+      <option value="Capricorn">Capricorn</option>
+      <option value="Aquarius">Aquarius</option>
+      <option value="Pisces">Pisces</option>
+    </select>
+
+    <label for="age">Age (Year of Life):</label>
+    <input type="number" id="age" min="1" max="120" placeholder="Enter your age">
+
+    <label for="mdHouse">Mahadasha Lord's House (from Lagna):</label>
+    <input type="number" id="mdHouse" min="1" max="12" placeholder="Enter house number (1–12)">
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div id="output"></div>
+  </div>
+
+  <script>
+    const signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+
+    function calculate() {
+      const lagna = document.getElementById("lagna").value;
+      const age = parseInt(document.getElementById("age").value);
+      const mdHouse = parseInt(document.getElementById("mdHouse").value);
+
+      if (isNaN(age) || isNaN(mdHouse)) {
+        document.getElementById("output").innerHTML = "⚠️ Please enter valid age and Mahadasha house.";
+        return;
+      }
+
+      const lagnaIndex = signs.indexOf(lagna);
+      const focusFromLagna = (age - 25 + 12) % 12; // Age 25 = 1st house
+      const focusSignFromLagna = signs[(lagnaIndex + focusFromLagna) % 12];
+
+      const focusFromMD = (mdHouse + focusFromLagna - 1) % 12;
+      const activatedHouseFromLagna = (focusFromMD + 12) % 12;
+      const activatedSign = signs[(lagnaIndex + activatedHouseFromLagna) % 12];
+
+      const houseThemes = [
+        "Self, health, identity",
+        "Wealth, family, speech",
+        "Courage, siblings, communication",
+        "Home, mother, inner peace",
+        "Creativity, children, romance",
+        "Enemies, debts, health issues",
+        "Marriage, partnerships",
+        "Transformation, occult, inheritance",
+        "Dharma, luck, father",
+        "Career, status, public life",
+        "Gains, networks, ambitions",
+        "Losses, foreign travel, moksha"
+      ];
+
+      const theme = houseThemes[activatedHouseFromLagna];
+
+      document.getElementById("output").innerHTML = `
+        <strong>Focus House from Lagna:</strong> ${focusFromLagna + 1} (${focusSignFromLagna})<br>
+        <strong>Activated House from MD Lord:</strong> ${activatedHouseFromLagna + 1} (${activatedSign})<br>
+        <strong>Yearly Theme:</strong> ${theme}
+      `;
+    }
+  </script>
+</body>
+</html>
